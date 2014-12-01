@@ -1,0 +1,5 @@
+venv
+certificates
+*.pyc
+*~
+stripekeys.db

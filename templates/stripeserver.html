@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>henrygd | Stripe Server</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+    <link rel="shortcut icon" href="static/img/favicon.png">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href="static/css/stripeserver.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    <p>This tool will allow your static website to complete Stripe Checkout transactions without a server. I made this as a companion to a website generator for nonprofits, and it is intended for owners of smaller, serverless websites that want to -- for instance -- accept donations. If you have a webstore that sells dozens or hundreds of items each day, however, setting up your own server is probably the better option.</p>
+
+    <h2>Add your public and private API keys to the database</h2>
+    <p>For security reasons, you may not update or delete a previously entered key pair. If you wish to change your keys, please generate a new
+    pair though Stripe, update your site's JavaScript, and add them here again.</p>
+
+    <input type="text" id="public" placeholder="pk_test_ciRdERN6HSjbwOKiix3DKnSI">
+    <input type="text" id="secret" placeholder="sk_test_8vF3e0a7GmtO8hRdulrCWvti">
+
+    <button id="butt">Submit</button>
+    <p id="result1"></p>
+
+    <h2>Enter your public API key to check its assigned secret key</h2>
+    <p>This will display only the first ten characters of the randomly generated bit.</p>
+
+    <input type="text" id="a" placeholder="pk_test_ciRdERN6HSjbwOKiix3DKnSI">
+
+    <button id="butt2">Submit</button>
+    <p id="result2"></p>
+
+
+    <h2>Instructions</h2>
+    <hr>
+    <p>Please refer to Stripe's <a href="https://stripe.com/docs" target="_blank">documentation</a> for more information on <a href="https://stripe.com/docs/checkout#integration-custom" target="_blank">using Checkout with the JavaScript API</a>. This server is currently set up for USD transactions, but if there is demand for other currencies I will add that functionality. I'll also add form examples soon.</p>
+    <p>To use this server, just add your keys above and pass over publicKey, stripeToken, amount, and description variables for each transaction, as shown below. Also make sure you disable the 'Remember Me' option on Checkout, because you need your own server and database to stash and fetch repeat customer details.</p>
+    <p>That's pretty much it!</p>
+    <p>Note: The examples use test keys and I recommend doing the same until <a href="https://stripe.com/docs/testing" target="_blank">test payments</a> go through and you're sure everything is properly configured. Obviously at that point you'll need to switch to live keys (make sure they are added above!).</p>
+
+    <p>Make sure you include jQuery and checkout.js:</p>
+<pre><code>
+    <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">script</span></span> <span class="support attribute">src</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">https://code.jquery.com/jquery-1.11.1.min.js</span><span class="string quote">"</span><span class="support tag close">&gt;</span><span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span></span><span class="support tag close">&gt;</span>
+    <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">script</span></span> <span class="support attribute">src</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">https://checkout.stripe.com/checkout.js</span><span class="string quote">"</span><span class="support tag close">&gt;</span><span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span></span><span class="support tag close">&gt;</span>
+</code></pre>
+
+    <p>Configuration:</p>
+
+<pre><code>
+    <span class="entity function">token</span>: <span class="keyword">function</span>(token) {
+       <span class="selector"> $</span>.post (<span class="string">"https://henrygd.me/charge"</span>, {
+            publicKey: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>, <span class="comment">// your key</span>
+            stripeToken: token.id, <span class="comment">// token id, don't change</span>
+            amount: <span class="constant numeric">500</span>, <span class="comment">// value in cents</span>
+            description: description <span class="comment">// whatever you want on the receipt</span>
+        });
+        <span class="comment">// trigger something on submit</span>
+    }
+</code></pre>
+
+    <p>The example below would allow a user on your site to enter a custom dollar amount in the field with the id of donationAmount, and click the button with the id of customButton to launch Stripe Checkout. When the user submits his or her details, Stripe Checkout would send the data here (https://henrygd.me/charge), where it is assigned to the the correct secret key, completes the transaction using the supplied variables, and posts to your Stripe account. Notice that allowRememberMe has been set to false.</p>
+
+<pre><code>
+    <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">input</span></span> <span class="support attribute">type</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">text</span><span class="string quote">"</span> <span class="support attribute">id</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">donationAmount</span><span class="string quote">"</span><span class="support tag close">&gt;</span>
+
+    <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">button</span></span> <span class="support attribute">id</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">customButton</span><span class="string quote">"</span><span class="support tag close">&gt;</span>Donate<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">button</span></span><span class="support tag close">&gt;</span>
+
+    <span class="support tag">&lt;</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
+      <span class="keyword">var</span> handler <span class="keyword operator">=</span> StripeCheckout.<span class="function call">configure</span>({
+        key: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>,
+        <span class="comment">image: "/square-image.png",</span>
+        <span class="entity function">token</span>: <span class="keyword">function</span>(token) {
+           <span class="selector"> $</span>.post (<span class="string">"https://henrygd.me/charge"</span>, {
+                publicKey: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>,
+                stripeToken: token.id,
+                amount: Math.<span class="function call">round</span>(<span class="function call">Number</span>($(<span class="string">"#donationAmount"</span>).<span class="function call">val</span>().<span class="function call">replace</span>(<span class="string">"$"</span>,""))<span class="keyword operator">*</span><span class="constant numeric">100</span>),
+                description: <span class="string">"Donation"</span>
+            });
+           <span class="comment">// trigger something on submit</span>
+        }
+      });
+
+     <span class="selector"> $</span>(<span class="string">"#customButton"</span>).<span class="function call">on</span>(<span class="string">"click"</span>, <span class="keyword">function</span>(e) {
+        donationamount <span class="keyword operator">=</span> <span class="function call">Number</span>($(<span class="string">"#donationAmount"</span>).<span class="function call">val</span>().<span class="function call">replace</span>(<span class="string">"$"</span>,""));
+        <span class="comment">// Open Checkout with further options</span>
+        handler.<span class="function call">open</span>({
+          name: <span class="string">"Nonprofit Organization"</span>,
+          description: <span class="string">"Donation ($"</span><span class="keyword operator">+</span>donationamount<span class="keyword operator">+</span><span class="string">")"</span>,
+          amount: Math.<span class="function call">round</span>(donationamount<span class="keyword operator">*</span><span class="constant numeric">100</span>),
+          allowRememberMe: <span class="constant language">false</span>
+        });
+        e.<span class="function call">preventDefault</span>();
+      });
+
+      <span class="comment">// Close Checkout on page navigation</span>
+     <span class="selector"> $</span>(<span class="support">window</span>).<span class="function call">on</span>(<span class="string">"popstate"</span>, <span class="keyword">function</span>() {
+        handler.<span class="function call">close</span>();
+      });
+    <span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
+</code></pre>
+
+  <h2>HTTPS for your site</h2>
+  <p>All submissions of payment info using Stripe Checkout and this site are made via a secure HTTPS connection. However, in order to protect yourself from man-in-the-middle attacks, please serve your page(s) containing the payment form with HTTPS as well. This means that any page you have a Checkout form on should start with <span class="imp">https://</span> rather than just <span class="imp">http://</span>.</p>
+  <p>You can force an HTTPS connection by adding the JavaScript below to your page inside the head tags. If you can't enable an HTTPS connection currently on your site, one easy and free option is to route your site through <a href="//www.cloudflare.com/" target="_blank">CloudFlare</a>. If you use any external content, such as images or scripts, you should also change those URLs to <span class="imp">https://</span> or your site will display errors and/or have that content blocked.</p>
+
+<pre><code>
+    <span class="support tag">&lt;</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
+      <span class="keyword">if</span> (<span class="support">window</span>.location.protocol <span class="keyword operator">!</span><span class="keyword operator">=</span> <span class="string">"https:"</span>)
+          <span class="support">window</span>.location.href <span class="keyword operator">=</span> <span class="string">"https:"</span> <span class="keyword operator">+</span> <span class="support">window</span>.location.href.<span class="function call">substring</span>(<span class="support">window</span>.location.protocol.<span class="support property">length</span>);
+    <span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
+</code></pre>
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<script>
+    $(function() {
+      var getkey = function(e) {
+        $.get("{{ url_for('getkey') }}", {
+        a: $('#a').val()
+        }, function(data) {
+        $('#result2').html(data.result);
+        });
+      };
+      $('#butt2').bind('click', getkey);
+    });
+</script>
+
+<script>
+    $('#butt').click(function() {
+      $.post ("{{ url_for('addkey') }}", {
+        publickey: $("#public").val(),
+        secretkey: $("#secret").val()
+      }, function(data) {
+        $('#result1').html(data.result);
+        });
+    });
+</script>
+
+</body>
+</html>

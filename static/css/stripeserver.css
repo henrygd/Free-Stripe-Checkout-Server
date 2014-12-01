@@ -1,0 +1,22 @@
+body{font-family:'Open Sans';background:#4E4E54;color:#E0E0E0;width:80%;margin:auto;max-width:1170px;padding:20px 0}
+h2{color:#D2C979;font-weight:400;margin-bottom:-10px}
+input{border:none;padding:2px 5px 4px;font-size:15px;}
+button{background:#67C26C;border:none;padding:5px 13px;color:#fff;cursor:pointer}
+button:hover{background:#5FB564}
+#result1>span, #result2>span{padding:2px 8px 4px;border-radius:2px}
+hr{margin-top:20px;border-color:#C3C3C3}
+.imp{background:#ECECEC;color:#F92672;padding:0 7px 1px;border-radius:5px}
+a,a:visited{text-decoration:none;color:#EAE57E;transition:all .3s}
+a:hover,a:visited:hover{color:#50CA64}
+
+pre{background-color:#1d1f21;word-wrap:break-word;margin:0;padding-bottom:12px;color:#c5c8c6;font-size:12px;margin-bottom:20px;max-height:220px;overflow:auto;border-radius:5px}
+pre .comment{color:#969896}
+pre .variable.global,pre .variable.class,pre .variable.instance{color:#c66}
+pre .constant,pre .entity,pre .entity.class,pre .support{color:#72B863}
+pre .constant.numeric,pre .constant.language,pre .constant.hex-color,pre .keyword.unit{color:#C57842}
+pre .constant.symbol,pre .string{color:#D2C979}
+pre .entity.function,pre .support.css-property,pre .selector{color:#81a2be}
+pre .keyword,pre .storage,pre .tag-name{color:#9F7CA9}
+
+@media(max-width:1200px) {
+body{width:90%}}
