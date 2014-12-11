@@ -3,105 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <title>henrygd | Stripe Server</title>
-    <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="static/img/favicon.png">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather+Sans:800' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="static/css/stripeserver.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
 </head>
 <body>
 
-    <p>This tool will allow your static website to complete Stripe Checkout transactions without a server. I made this as a companion to a website generator for nonprofits, and it is intended for owners of smaller, serverless websites that want to -- for instance -- accept donations. If you have a webstore that sells dozens or hundreds of items each day, however, setting up your own server is probably the better option.</p>
+    <div id="header"><h1>Free Stripe Checkout Server</h1></div>
 
-    <h2>Add your public and private API keys to the database</h2>
+    <p>This tool allows your static website to complete Stripe Checkout transactions without a server and without forcing users to leave your site. I made it as a companion to a website builder for nonprofits, and it is intended for owners of smaller, serverless websites that want to, for instance, accept donations. If you have a store that sells dozens or hundreds of items each day, however, setting up your own server is probably the better option.</p>
+
+    <section class="inputs">
+
+    <h2>Add your publishable and secret API keys to the database</h2>
     <p>For security reasons, you may not update or delete a previously entered key pair. If you wish to change your keys, please generate a new
     pair though Stripe, update your site's JavaScript, and add them here again.</p>
 
-    <input type="text" id="public" placeholder="pk_test_ciRdERN6HSjbwOKiix3DKnSI">
+    <input type="text" id="publishable" placeholder="pk_test_ciRdERN6HSjbwOKiix3DKnSI">
     <input type="text" id="secret" placeholder="sk_test_8vF3e0a7GmtO8hRdulrCWvti">
 
-    <button id="butt">Submit</button>
+    <button id="btn1" class="btn icon-add">Submit</button>
     <p id="result1"></p>
 
-    <h2>Enter your public API key to check its assigned secret key</h2>
+    <h2 style="margin-top:30px">Enter your publishable API key to check its assigned secret key</h2>
     <p>This will display only the first ten characters of the randomly generated bit.</p>
 
     <input type="text" id="a" placeholder="pk_test_ciRdERN6HSjbwOKiix3DKnSI">
 
-    <button id="butt2">Submit</button>
+    <button id="btn2" class="btn icon-check">Verify</button>
     <p id="result2"></p>
 
+    </section>
 
-    <h2>Instructions</h2>
+    <h1 style="margin-bottom:-10px">Instructions</h1>
     <hr>
-    <p>Please refer to Stripe's <a href="https://stripe.com/docs" target="_blank">documentation</a> for more information on <a href="https://stripe.com/docs/checkout#integration-custom" target="_blank">using Checkout with the JavaScript API</a>. This server is currently set up for USD transactions, but if there is demand for other currencies I will add that functionality. I'll also add form examples soon.</p>
-    <p>To use this server, just add your keys above and pass over publicKey, stripeToken, amount, and description variables for each transaction, as shown below. Also make sure you disable the 'Remember Me' option on Checkout, because you need your own server and database to stash and fetch repeat customer details.</p>
+    <p>To use this server, just add your keys above and pass over publishableKey, stripeToken, and amount variables for each transaction, as shown below. The description parameter is optional.</p>
     <p>That's pretty much it!</p>
-    <p>Note: The examples use test keys and I recommend doing the same until <a href="https://stripe.com/docs/testing" target="_blank">test payments</a> go through and you're sure everything is properly configured. Obviously at that point you'll need to switch to live keys (make sure they are added above!).</p>
+    <p>Note: The examples use test keys and I recommend doing the same until <a href="https://stripe.com/docs/testing">test payments</a> go through and you're sure everything is properly configured. Obviously at that point you'll need to switch to live keys (make sure they are added above!).</p>
+     <p>Please refer to Stripe's <a href="https://stripe.com/docs">documentation</a> for more information on <a href="https://stripe.com/docs/checkout#integration-custom">using Checkout with custom JavaScript</a>. This server is currently set up for USD transactions, but if there is demand for other currencies I will add that functionality. I'll also add form examples soon.</p>
 
-    <p>Make sure you include jQuery and checkout.js:</p>
+    <h3>Make sure to include jQuery and checkout.js</h3>
 <pre><code>
     <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">script</span></span> <span class="support attribute">src</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">https://code.jquery.com/jquery-1.11.1.min.js</span><span class="string quote">"</span><span class="support tag close">&gt;</span><span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span></span><span class="support tag close">&gt;</span>
     <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">script</span></span> <span class="support attribute">src</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">https://checkout.stripe.com/checkout.js</span><span class="string quote">"</span><span class="support tag close">&gt;</span><span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span></span><span class="support tag close">&gt;</span>
 </code></pre>
 
-    <p>Configuration:</p>
+    <h3>Configuration</h3>
 
 <pre><code>
     <span class="entity function">token</span>: <span class="keyword">function</span>(token) {
-       <span class="selector"> $</span>.post (<span class="string">"https://henrygd.me/charge"</span>, {
-            publicKey: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>, <span class="comment">// your key</span>
+       <span class="selector"> $</span>.getJSON (<span class="string">"https://henrygd.me/charge?callback=?"</span>, {
+            publishableKey: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>, <span class="comment">// your key</span>
             stripeToken: token.id, <span class="comment">// token id, don't change</span>
             amount: <span class="constant numeric">500</span>, <span class="comment">// value in cents</span>
-            description: description <span class="comment">// whatever you want on the receipt</span>
+            description: <span class="string">"description"</span> <span class="comment">// optional string that shows up on the receipt</span>
         });
-        <span class="comment">// trigger something on submit</span>
     }
 </code></pre>
 
-    <p>The example below would allow a user on your site to enter a custom dollar amount in the field with the id of donationAmount, and click the button with the id of customButton to launch Stripe Checkout. When the user submits his or her details, Stripe Checkout would send the data here (https://henrygd.me/charge), where it is assigned to the the correct secret key, completes the transaction using the supplied variables, and posts to your Stripe account. Notice that allowRememberMe has been set to false.</p>
+    <section class="callbacks">
+    <h1>Callbacks</h1>
+    <p>Successful charge confirmation returned in data.result. On error, full dump provided in data.error</p>
+    <table>
+      <thead>
+        <th>EXAMPLE CASE</th>
+        <th>JSON RESPONSE</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td><p>Successful charge</p></td>
+          <td><p>{"result": "Thank you!"}</p></td>
+        </tr>
+        <tr>
+          <td><p>No secret key matched the supplied publishable key</p></td>
+          <td><p>{"error": {"message": "Stripe key pair not found. Please verify at henrygd.me/stripeserver"}}</p></td>
+        </tr>
+        <tr>
+          <td><p>Credit card passes Stripe validation but customer's bank declines the charge</p></td>
+          <td><p>{"error": {"charge": "ch_1521qLDnwM9olc9rdu2hemqR", "code": "card_declined", "message": "Your card was declined.", "type": "card_error"}}</p></td>
+        </tr>
+        <tr>
+          <td><p>Amount variable is 42 (cents)</p></td>
+          <td><p>{"error": {"message": "Amount must be at least 50 cents", "param": "amount", "type": "invalid_request_error"}}</p></td>
+        </tr>
+        <tr>
+          <td><p>Amount variable is passed in as a string, "forty two"</p></td>
+          <td><p>{"error": {"message": "Invalid integer: forty two", "param": "amount", "type": "invalid_request_error"}}</p></td>
+        </tr>
+      </tbody>
+    <tfoot>
+      <td colspan="2" class="tablebottom">
+      <div id="testcard1"><p class="success">Successful charge<br>4242 4242 4242 4242</p></div>
+      <div id="testcard2"><p class="error">Charge denied by bank<br>4000 0000 0000 0341</p></div>
+      <p>At the bottom left of this page you can try Stripe Checkout with your own key and test the two most common scenarios by using the credit card numbers above. These should post to your own test dashboard. You can find other test cases by clicking the yellow 'test' button in the upper right corner when you bring up the Stripe modal.</p>
+      <p style="clear:both;margin-bottom:20px">You should never encounter "Stripe key pair not found ... " as long as your key can be verified above. If you do, please double-check your JavaScript and/or email me at hank@henrygd.me.</p>
+      </tfoot>
+    </tr>
+    </table>
+    </section>
 
-<pre><code>
-    <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">input</span></span> <span class="support attribute">type</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">text</span><span class="string quote">"</span> <span class="support attribute">id</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">donationAmount</span><span class="string quote">"</span><span class="support tag close">&gt;</span>
+    <p>The complete example below is the code I'm using for the test donation at the bottom of the page (the one on the left). A user clicks the button with the id (#) of teststartbtn to bring up a modal with an input field #donationamount where he or she can enter a custom dollar amount. Then the user clicks #stripestartbtn in the modal to launch Stripe Checkout. When the user submits his or her details, Stripe Checkout creates a token and sends it here (https://henrygd.me/charge), where it is assigned to the the correct secret key. The transaction is completed using the supplied variables and is posted to your Stripe account within seconds. The user is presented with another modal containing the result of the transaction (in this case, direct from the response). Make sure you replace BOTH keys in the script with your publishable keys. I turn off allowRememberMe by setting it to false. Personal preference.</p>
 
-    <span class="support tag"><span class="support tag">&lt;</span><span class="support tag-name">button</span></span> <span class="support attribute">id</span><span class="support operator">=</span><span class="string quote">"</span><span class="string value">customButton</span><span class="string quote">"</span><span class="support tag close">&gt;</span>Donate<span class="support tag"><span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">button</span></span><span class="support tag close">&gt;</span>
-
-    <span class="support tag">&lt;</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
+<pre style="padding-left:30px"><code>
+<span class="support tag">&lt;</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
       <span class="keyword">var</span> handler <span class="keyword operator">=</span> StripeCheckout.<span class="function call">configure</span>({
-        key: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>,
-        <span class="comment">image: "/square-image.png",</span>
+        key: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>, <span class="comment">// replace with your key</span>
+        image: <span class="string">"static/img/square-image.png"</span>, <span class="comment">// replace or comment out</span>
         <span class="entity function">token</span>: <span class="keyword">function</span>(token) {
-           <span class="selector"> $</span>.post (<span class="string">"https://henrygd.me/charge"</span>, {
-                publicKey: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>,
-                stripeToken: token.id,
-                amount: Math.<span class="function call">round</span>(<span class="function call">Number</span>($(<span class="string">"#donationAmount"</span>).<span class="function call">val</span>().<span class="function call">replace</span>(<span class="string">"$"</span>,""))<span class="keyword operator">*</span><span class="constant numeric">100</span>),
-                description: <span class="string">"Donation"</span>
+           <span class="selector"> $</span>.getJSON (<span class="string">"https://henrygd.me/charge?callback=?"</span>, { <span class="comment">// do not change</span>
+                publishableKey: <span class="string">"pk_test_ciRdERN6HSjbwOKiix3DKnSI"</span>, <span class="comment">// replace with your key</span>
+                stripeToken: token.id, <span class="comment">// do not change</span>
+                amount: Math.<span class="function call">round</span>(<span class="function call">Number</span>(<span class="selector">$</span>(<span class="string">"#donationamount"</span>).<span class="function call">val</span>().<span class="function call">replace</span>(<span class="string">"$"</span>,""))<span class="keyword operator">*</span><span class="constant numeric">100</span>),
+                description: <span class="string">"Donation"</span> <span class="comment">// optional, you may delete line</span>
+            }, <span class="storage function">function</span> (data) { <span class="comment">// data is the server response data</span>
+              <span class="keyword">if</span> (data.result <span class="keyword operator">!</span><span class="keyword operator">=</span> undefined){ <span class="comment">// if successful, data.result is returned</span>
+               <span class="selector"> $</span>(<span class="string">'#resultinfo'</span>).<span class="function call">html</span>(data.result) <span class="comment">// writes "Thank you!"to #resultinfo in modal</span>
+              } <span class="keyword">else</span>{ <span class="comment">// if error, data.error dump is returned</span>
+               <span class="selector"> $</span>(<span class="string">'#resultinfo'</span>).<span class="function call">html</span>(data.error.message) <span class="comment">// writes error message to modal</span>
+              }
             });
-           <span class="comment">// trigger something on submit</span>
+        <span class="comment">// pauses for one second then displays modal with transaction result</span>
+        <span class="support function">setTimeout</span>(<span class="keyword">function</span>(){$(<span class="string">'#modalpin2, #modal2'</span>).<span class="function call">fadeIn</span>(<span class="constant numeric">150</span>);}, <span class="constant numeric">1000</span>);
         }
       });
 
-     <span class="selector"> $</span>(<span class="string">"#customButton"</span>).<span class="function call">on</span>(<span class="string">"click"</span>, <span class="keyword">function</span>(e) {
-        donationamount <span class="keyword operator">=</span> <span class="function call">Number</span>($(<span class="string">"#donationAmount"</span>).<span class="function call">val</span>().<span class="function call">replace</span>(<span class="string">"$"</span>,""));
-        <span class="comment">// Open Checkout with further options</span>
+     <span class="selector"> $</span>(<span class="string">"#stripestartbtn"</span>).<span class="function call">on</span>(<span class="string">"click"</span>, <span class="keyword">function</span>(e) { <span class="comment">// button id that launches Checkout</span>
+       <span class="selector"> $</span>(<span class="string">'#modalpin1, #modal1'</span>).<span class="function call">fadeOut</span>(<span class="constant numeric">150</span>); <span class="comment">// closes modal containing above button</span>
+        <span class="comment">// converts donationamount field to simple number</span>
+        donationAmount <span class="keyword operator">=</span> <span class="function call">Number</span>($(<span class="string">"#donationamount"</span>).<span class="function call">val</span>().<span class="function call">replace</span>(<span class="string">"$"</span>,""));
+        <span class="comment">// Open Checkout with further options - customize name and description</span>
         handler.<span class="function call">open</span>({
-          name: <span class="string">"Nonprofit Organization"</span>,
-          description: <span class="string">"Donation ($"</span><span class="keyword operator">+</span>donationamount<span class="keyword operator">+</span><span class="string">")"</span>,
-          amount: Math.<span class="function call">round</span>(donationamount<span class="keyword operator">*</span><span class="constant numeric">100</span>),
+          name: <span class="string">"Test Donation"</span>,
+          description: <span class="string">"Donation ($"</span> <span class="keyword operator">+</span> donationAmount <span class="keyword operator">+</span> <span class="string">")"</span>,
+          amount: Math.<span class="function call">round</span>(donationAmount<span class="keyword operator">*</span><span class="constant numeric">100</span>),
           allowRememberMe: <span class="constant language">false</span>
         });
         e.<span class="function call">preventDefault</span>();
       });
-
-      <span class="comment">// Close Checkout on page navigation</span>
-     <span class="selector"> $</span>(<span class="support">window</span>).<span class="function call">on</span>(<span class="string">"popstate"</span>, <span class="keyword">function</span>() {
-        handler.<span class="function call">close</span>();
-      });
-    <span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
+<span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
 </code></pre>
 
-  <h2>HTTPS for your site</h2>
-  <p>All submissions of payment info using Stripe Checkout and this site are made via a secure HTTPS connection. However, in order to protect yourself from man-in-the-middle attacks, please serve your page(s) containing the payment form with HTTPS as well. This means that any page you have a Checkout form on should start with <span class="imp">https://</span> rather than just <span class="imp">http://</span>.</p>
-  <p>You can force an HTTPS connection by adding the JavaScript below to your page inside the head tags. If you can't enable an HTTPS connection currently on your site, one easy and free option is to route your site through <a href="//www.cloudflare.com/" target="_blank">CloudFlare</a>. If you use any external content, such as images or scripts, you should also change those URLs to <span class="imp">https://</span> or your site will display errors and/or have that content blocked.</p>
+    <p>Additionally, you can use the callback content to show your own custom message, instead of simply displaying a the returned one</p>
+
+<pre style="padding-left:30px"><code>
+<span class="storage function">function</span> (data) {
+    <span class="keyword">if</span> (data.result <span class="keyword operator">!</span><span class="keyword operator">=</span> undefined){
+       <span class="selector"> $</span>(<span class="string">'#resultinfo'</span>).<span class="function call">html</span>(
+            <span class="string">"YAY MONEY"</span> <span class="comment">// whatever you want</span>
+        )
+    } <span class="keyword">else</span>{
+       <span class="selector"> $</span>(<span class="string">'#resultinfo'</span>).<span class="function call">html</span>(
+            <span class="string">"SORRY THERE WAS AN ERROR"</span>
+        )
+    }
+});
+</code></pre>
+
+    <h2><i class="fa fa-lock" style="color:#D7A300"></i> <span class="imp">HTTPS</span> for your site</h2>
+    <p>All submissions of payment info using Stripe Checkout and this site are made via a secure HTTPS connection. However, in order to protect yourself from man-in-the-middle attacks, please serve your page(s) containing the payment form with HTTPS as well. This means that any page you have a Checkout form on should start with <span class="imp">https://</span> rather than just <span class="imp">http://</span>.</p>
+    <p>You can force an HTTPS connection by adding the JavaScript below to your page inside the head tags. If you can't enable an HTTPS connection currently on your site, one easy and free option is to route your site through <a href="//www.cloudflare.com/">CloudFlare</a>. If you use any external content, such as images or scripts, you should also change those URLs to <span class="imp">https://</span> or your site will display errors and/or have that content blocked.</p>
 
 <pre><code>
     <span class="support tag">&lt;</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
@@ -110,7 +175,121 @@
     <span class="support tag">&lt;</span><span class="support tag special">/</span><span class="support tag-name">script</span><span class="support tag close">&gt;</span>
 </code></pre>
 
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <footer class="footerheight">
+      <div class="test"><button id="testbtn" class="btn icon-stripe">Test it out</button></div>
+      <div class="foreal"><button id="forealbtn" class="btn icon-meh">Donate to me</button></div>
+      <div id="slideout" style="text-align:center">
+      <p class="icon-back"></p>
+      <input id="yourkey" type="text" style="margin: 24px 10px 10px;" placeholder="Enter your publishable key">
+      <div style="display:inline"><button id="teststartbtn" class="btn icon-thumbs" style="margin: 10px 10px 24px;">Test</button></div>
+      </div>
+    </footer>
+
+    <!-- dark modal backdrop -->
+    <div class="overlay"></div>
+
+    <!-- test modal intro -->
+    <div id="modalpin1">
+      <div id="modal1" class="imp">
+        <i class="fa fa-times"></i>
+        <input type="text" id="donationamount" placeholder="Enter donation amount">
+        <button id="stripestartbtn" class="btn">Continue</button>
+      </div>
+    </div>
+
+    <!-- result modal -->
+    <div id="modalpin2">
+      <div id="modal2" class="imp">
+        <i class="fa fa-times"></i>
+        <p id="resultinfo"></p>
+      </div>
+    </div>
+
+    <!-- actual donation modal -->
+    <div id="modalpin3">
+      <div id="modal3" class="imp">
+        <input type="text" id="realdonationamount" placeholder="Enter donation amount">
+        <button id="forealdonatebtn" class="btn">Continue</button>
+      </div>
+    </div>
+
+<!-- stripe test mode code -->
+<script>
+      var handler = StripeCheckout.configure({
+        key: "pk_test_fiRdSRK6HSjbzOKiwx3KKnSI", // have to use my key on this
+        image: "static/img/square-image.png", // replace or comment out
+        token: function(token) {
+            $.get ("/charge", { // do not change
+                publishableKey: $('#yourkey').val(), // replace with your key
+                stripeToken: token.id, // do not change
+                amount: Math.round(Number($("#donationamount").val().replace("$",""))*100),
+                description: "Donation" // optional, you may delete line
+            }, function (data) { // data is the server response data
+              if (data.result != undefined){
+                $('#resultinfo').html(data.result)
+              } else{
+                $('#resultinfo').html(data.error.message)
+              }
+            });
+        setTimeout(function(){$('#modalpin2, #modal2').fadeIn(150);}, 1000);
+        }
+      });
+
+      $("#stripestartbtn").on("click", function(e) { // button id that launches Checkout
+        $('body').addClass('hideoverflow');
+        $('#modalpin1, #modal1').fadeOut(150); // closes modal containing above button
+        // converts donationamount field to simple number
+        donationAmount = Number($("#donationamount").val().replace("$",""));
+        // Open Checkout with further options - customize name and description
+        handler.open({
+          name: "Test Donation",
+          description: "Donation ($" + donationAmount + ")",
+          amount: Math.round(donationAmount*100),
+          allowRememberMe: false
+        });
+        e.preventDefault();
+      });
+</script>
+
+<!-- actual donation configuration -->
+<script>
+      var handler2 = StripeCheckout.configure({
+        key: "pk_live_JgiPqhwY3t7CqPZNnIrlWsuY",
+        image: "static/img/square-image.png",
+        token: function(token) {
+            $.get ("/charge", {
+                publishableKey: "pk_live_JgiPqhwY3t7CqPZNnIrlWsuY",
+                stripeToken: token.id,
+                amount: Math.round(Number($("#realdonationamount").val().replace("$",""))*100),
+                description: "Donation"
+            }, function (data) {
+              if (data.result != undefined){
+                $('#resultinfo').html(
+                  "Thank you very much, I hope you are enjoying this tool!"
+                  )
+              } else{
+                $('#resultinfo').html(
+                  "Sorry, it appears the transaction was unsuccessful :("
+                  )
+              }
+            });
+            setTimeout(function(){$('#modalpin2, #modal2').fadeIn(150);}, 1000);
+        }
+      });
+
+      $("#forealdonatebtn").on("click", function(e) {
+        $('body').addClass('hideoverflow');
+        $('#modalpin3, #modal3').fadeOut(150);
+        donationAmount = Number($("#realdonationamount").val().replace("$",""));
+        handler2.open({
+          name: "Henry Dollman",
+          description: "Donation ($" + donationAmount + ")",
+          amount: Math.round(donationAmount*100),
+          allowRememberMe: false
+        });
+        e.preventDefault();
+      });
+</script>
 
 <script>
     $(function() {
@@ -118,22 +297,90 @@
         $.get("{{ url_for('getkey') }}", {
         a: $('#a').val()
         }, function(data) {
-        $('#result2').html(data.result);
+          if (data.result=='error1'){
+            $('#result2').slideUp(200).html("<span class='error'>Key not found</span>").slideDown(200);
+            $('#btn2').addClass('btn-error');
+            }
+          else if (data.result=='error2'){
+            $('#result2').slideUp(200).html("<span class='error'>Invalid format</span>").slideDown(200);
+            $('#btn2').addClass('btn-error');
+            }
+          else{
+            $('#result2').slideUp(200).html("<span class='success'>"+data.result+"</span>").slideDown(200);
+            $('#btn2').addClass('btn-success');
+            }
         });
       };
-      $('#butt2').bind('click', getkey);
+      $('#btn2').bind('click', getkey);
     });
 </script>
 
 <script>
-    $('#butt').click(function() {
+    $('#btn1').click(function() {
       $.post ("{{ url_for('addkey') }}", {
-        publickey: $("#public").val(),
+        publishablekey: $("#publishable").val(),
         secretkey: $("#secret").val()
       }, function(data) {
-        $('#result1').html(data.result);
+        if (data.result=='error1'){
+          $('#result1').slideUp(200).html("<span class='error'>At least one these keys already exists. Please see the note above.</span>").slideDown(200);
+          $('#btn1').addClass('btn-error');
+          }
+        else if (data.result=='error2'){
+          $('#result1').slideUp(200).html("<span class='error'>Please make sure your keys are properly formatted and in the correct fields.</span>").slideDown(200);
+          $('#btn1').addClass('btn-error');
+          }
+        else{
+          $('#result1').slideUp(200).html("<span class='success'>Your keys have been added! Try verifying below.</span>").slideDown(200);
+          $('#btn1').addClass('btn-success');
+          }
         });
     });
+</script>
+
+<script>
+    $('#publishable, #secret').focus(function() {
+      $('#btn1').removeClass("btn-error").removeClass("btn-success");
+      $('#result1').slideUp(200);
+    });
+    $('#a').focus(function() {
+      $('#btn2').removeClass("btn-error").removeClass("btn-success");
+      $('#result2').slideUp(200);
+    });
+</script>
+
+<script>
+$('#testbtn').click(function(){
+    $('.test').fadeOut(200);
+    $('.foreal').fadeOut(200);
+    setTimeout(function(){$('#slideout').fadeIn();$('footer').removeClass('footerheight');}, 220);
+});
+$('#teststartbtn').click(function(){
+    $('#modalpin1, #modal1').fadeIn(150);
+    $('.overlay').fadeIn(400);
+})
+$('#forealbtn').click(function(){
+    $('#modalpin3, #modal3').fadeIn(150);
+    $('.overlay').fadeIn(400);
+})
+</script>
+
+<script>
+$('.overlay, .fa-times').click(function(){
+   $("[id^='modal']").fadeOut(150);
+   $('.overlay').fadeOut(400);
+   $('body').removeClass('hideoverflow');
+});
+$('.icon-back').click(function(){
+  $('#slideout').fadeOut(200);
+  $('footer').addClass('footerheight');
+   setTimeout(function(){$('.test').fadeIn(200);$('.foreal').fadeIn(200);}, 220);
+});
+</script>
+
+<script>
+$(function() {
+  $('#result1, #result2, #slideout').hide();
+});
 </script>
 
 </body>

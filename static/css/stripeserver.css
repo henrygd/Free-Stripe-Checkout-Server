@@ -1,15 +1,50 @@
-body{font-family:'Open Sans';background:#4E4E54;color:#E0E0E0;width:80%;margin:auto;max-width:1170px;padding:20px 0}
-h2{color:#D2C979;font-weight:400;margin-bottom:-10px}
-input{border:none;padding:2px 5px 4px;font-size:15px;}
-button{background:#67C26C;border:none;padding:5px 13px;color:#fff;cursor:pointer}
-button:hover{background:#5FB564}
-#result1>span, #result2>span{padding:2px 8px 4px;border-radius:2px}
-hr{margin-top:20px;border-color:#C3C3C3}
-.imp{background:#ECECEC;color:#F92672;padding:0 7px 1px;border-radius:5px}
-a,a:visited{text-decoration:none;color:#EAE57E;transition:all .3s}
-a:hover,a:visited:hover{color:#50CA64}
+body{overflow:auto;font-family:'Open Sans';font-size:16px;background:#F0F0F0;color:#4F4F4F;width:80%;margin:auto;max-width:1170px;padding-bottom:40px}
+#header{width:100%;margin:0 0 25px auto;text-align:center;color:#FAFAFA;background-color:#3CC86D;box-shadow:0 8px #04A03B;}
+#header h1{padding:10px;}
+h1{font-family: "Merriweather Sans";font-size:25px;font-weight:800;text-align:center;text-transform:uppercase;margin-top:40px}
+p{line-height:1.6;}
+.inputs{margin:30px 0;}
+h2{color:#0074D9;font-weight:400;margin-bottom:-10px;}
+h3{font-weight:400;margin-bottom:10px;font-size:20px;}
+input{border:none;outline:none;padding:10px;font-size:18px;background-color:#4C4C4C;color:#F4F4F4;box-shadow:0 5px #383838;}
+#result1>span, #result2>span{font-size:19px;padding:2px 8px 4px;border-radius:2px;color:#F9F9F9}
+hr{margin-top:20px;}
+.callbacks{;text-align:center;}
+.callbacks h1{margin-bottom:-10px;}
+table{border-spacing:0;background-color:#4C4C4C;color:#F4F4F4;margin-top:10px}
+th{height:40px;background-color:#646464}
+tfoot{background-color:#646464}
+td{width:50%;border-bottom: 1px solid #666;}
+td>p{margin:35px 50px;};
+tr{width:100%}
+.tablebottom p{text-align:left;margin:20px 40px auto}
+#testcard1,#testcard2{float:left;width:50%;margin:12px 0 20px}
+#testcard1>p,#testcard2>p{width:65%;margin:10px auto;padding:15px;box-shadow:none;text-align:center}
+.imp{background:#2AB85C;color:#FAFAFA;padding:0 7px 1px;border-radius:5px;box-shadow:0 4px #04A03B;font-weight:600}
+a,a:visited{text-decoration:none;color:#0074D9}
+a:hover,a:visited:hover{color:#04A03B;transition:0.5s}
+footer{width:100%;background-color:#2AB85C;box-shadow:0 8px #04A03B;}
+.footerheight{height:90px}
+.test,.foreal{float:left;width:50%;margin:0 auto;margin-top:20px;text-align:center;}
+#testbtn, #teststartbtn,#forealbtn,#stripestartbtn,#forealdonatebtn{background:#f5f5f5!important;color:#39CD6D!important;box-shadow:0 4px #bbb!important;}
+#testbtn{width:190px;}
+#forealbtn{width:200px;padding:18px 7px 18px 46px;}
+#stripestartbtn,#forealdonatebtn{padding:15px 15px 15px 15px;font-size:14px}
+.error{background:#EF5F5F;box-shadow: 0 5px #EA4A4A;}
+.success{background:#2AB85C;box-shadow: 0 5px #04A03B}
 
-pre{background-color:#1d1f21;word-wrap:break-word;margin:0;padding-bottom:12px;color:#c5c8c6;font-size:12px;margin-bottom:20px;max-height:220px;overflow:auto;border-radius:5px}
+/* modal stuff */
+.overlay{display:none;position:fixed;top:0;bottom:0;left:0;right:0;overflow:hidden;padding:0;margin:0;background-color:rgba(0,0,0,0.6);z-index:1}
+#modalpin1,#modalpin2,#modalpin3{display:none;position:fixed;left:50%;top:45%;z-index:2}
+#modal1,#modal2,#modal3{display:none;position:absolute;height:180px;width:300px;left:-150px;top:-90px;text-align:center;box-shadow:0px 0px 40px rgba(0,0,0,0.6);}
+#donationamount,#realdonationamount{letter-spacing:1px;text-align:center;margin:43px 0 25px;width:240px;box-shadow: 0 4px #383838;}
+#resultinfo{margin: 60px 20px;}
+.fa-times{cursor:pointer;position:absolute;right:0;top:0;cursor:pointer;padding:5px}
+.fa-times:hover{opacity:0.7}
+.hideoverflow{overflow:hidden!important;}
+
+/* code highlighting */
+pre{background-color:#353535;margin:0;padding-bottom:12px;color:#D3D7D4;font-size:12px;margin-bottom:20px;max-height:220px;overflow:auto;border-radius:5px}
 pre .comment{color:#969896}
 pre .variable.global,pre .variable.class,pre .variable.instance{color:#c66}
 pre .constant,pre .entity,pre .entity.class,pre .support{color:#72B863}
@@ -18,5 +53,74 @@ pre .constant.symbol,pre .string{color:#D2C979}
 pre .entity.function,pre .support.css-property,pre .selector{color:#81a2be}
 pre .keyword,pre .storage,pre .tag-name{color:#9F7CA9}
 
-@media(max-width:1200px) {
-body{width:90%}}
+/* buttons, icons */
+[class^="icon-"]:before,[class*=" icon-"]:before{font-family:FontAwesome;font-weight:400;color:#0F9045;line-height:35%}
+.btn{min-width: 140px;border:none;font-family:inherit;font-size:inherit;cursor:pointer;display:inline-block;margin:0 10px;text-transform:uppercase;letter-spacing:1px;font-weight:600;outline:none;position:relative;background:#2AB85C;color:#fff;box-shadow:0 5px #04A03B;padding:18px 24px 18px 51px;line-height:60%;}
+.btn:after{content:'';position:absolute;z-index:-1;-webkit-transition:all .3s;-moz-transition:all .3s;transition:all .3s}
+.btn span{display:inline-block;width:100%}
+.btn:before{position:absolute;left:0;width:40%;font-size:160%}
+.btn-success,.btn-error{color:transparent}
+.btn-success:after,.btn-error:after{z-index:1;color:#fff;left:40%}
+.icon-add:before{content:"\f055"}
+.icon-back:before{content:"\f1da";color:#f5f5f5;position:absolute;right:10%;padding:10px;margin-top:3px;font-size:20px;cursor:pointer}
+.icon-check:before{content:"\f058"}
+.icon-meh:before{content:"\f11a";color:#39CD6D;width:30%}
+.icon-stripe:before{content:"\f1f5";color:#39CD6D;width:30%}
+.icon-thumbs:before{content:"\f087";color:#39CD6D;width:55%}
+.btn-success:before{content:"\f087"}
+.btn-success:after{content:"Success!";left:35%!important;-webkit-animation:moveUp .5s;-moz-animation:moveUp .5s;animation:moveUp .5s}
+@-webkit-keyframes moveUp {
+0%{-webkit-transform:translateY(50%);opacity:0}
+100%{opacity:1;-webkit-transform:translateY(0)}
+}
+@-moz-keyframes moveUp {
+0%{-moz-transform:translateY(50%);opacity:0}
+100%{opacity:1;-moz-transform:translateY(0)}
+}
+@keyframes moveUp {
+0%{transform:translateY(50%);opacity:0}
+100%{opacity:1;transform:translateY(0)}
+}
+.btn-error{-webkit-animation:shake .5s;-moz-animation:shake .5s;animation:shake .5s}
+@-webkit-keyframes shake {
+0%,100%{-webkit-transform:translateX(0)}
+10%,30%,50%,70%,90%{-webkit-transform:translateX(-10px)}
+20%,40%,60%,80%{-webkit-transform:translateX(10px)}
+}
+@-moz-keyframes shake {
+0%,100%{-moz-transform:translateX(0)}
+10%,30%,50%,70%,90%{-moz-transform:translateX(-10px)}
+20%,40%,60%,80%{-moz-transform:translateX(10px)}
+}
+@keyframes shake {
+0%,100%{transform:translateX(0)}
+10%,30%,50%,70%,90%{transform:translateX(-10px)}
+20%,40%,60%,80%{transform:translateX(10px)}
+}
+.btn-error:before{content:"\f119"}
+.btn-error:after{content:"Error!";-webkit-animation:scaleFromUp .5s;-moz-animation:scaleFromUp .5s;animation:scaleFromUp .5s}
+@-webkit-keyframes scaleFromUp {
+0%{-webkit-transform:scale(0);opacity:0}
+100%{opacity:1;-webkit-transform:scale(1)}
+}
+@-moz-keyframes scaleFromUp {
+0%{-moz-transform:scale(0);opacity:0}
+100%{opacity:1;-moz-transform:scale(1)}
+}
+@keyframes scaleFromUp {
+0%{transform:scale(0);opacity:0}
+100%{opacity:1;transform:scale(1)}
+}
+
+@media(max-width:870px) {
+body{width:90%}
+.inputs{text-align:center;}
+input{margin-bottom: 10px}
+.footerheight{height:150px;}
+.test,.foreal{clear:both;width:100%}
+td>p{margin:10px;padding: 10px 0}
+#testcard1,#testcard2{clear:both;width:100%}
+#testcard1{margin-top:30px;}
+#testcard1>p,#testcard2>p{margin:0 auto}
+.icon-back:before{right:5%;font-size:16px}
+}

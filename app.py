@@ -1,9 +1,26 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, \
+    url_for, current_app
+from functools import wraps
 import sqlite3
 import sql_stripe
 import re
 
 app = Flask(__name__)
+
+
+def jsonp(func):
+    """Wraps JSONified output for JSONP requests."""
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        callback = request.args.get('callback', False)
+        if callback:
+            data = str(func(*args, **kwargs).data)
+            content = str(callback) + '(' + data + ')'
+            mimetype = 'application/javascript'
+            return current_app.response_class(content, mimetype=mimetype)
+        else:
+            return func(*args, **kwargs)
+    return decorated_function
 
 
 @app.route('/')
@@ -20,21 +37,16 @@ def stripeserver():
 def addkey():
     goodpub = re.compile("^pk_(test|live)_[a-zA-Z0-9]{24}$")
     goodsec = re.compile("^sk_(test|live)_[a-zA-Z0-9]{24}$")
-    public, secret = request.form['publickey'], request.form['secretkey']
+    public, secret = request.form['publishablekey'], request.form['secretkey']
     if goodpub.match(public) and goodsec.match(secret):
         keys = (public, secret)
         try:
             sql_stripe.addkeys(keys)
-            result = "<span style='background:#4EB053'>Your keys have been \
-                added! Try verifying below.</span>"
+            return jsonify(result="success")
         except:
-            result = "<span style='background:#DF4F4F'>Error: At least one \
-                these keys already exists. Please see the note above.</span>"
-        return jsonify(result=result)
+            return jsonify(result="error1")
     else:
-        return jsonify(result="<span style='background:#DF4F4F'>Error: Please \
-            make sure your keys are properly formatted and in the correct \
-            fields.</span>")
+        return jsonify(result="error2")
 
 
 @app.route('/getkey')
@@ -46,33 +58,35 @@ def getkey():
         c.execute('SELECT secret FROM keys WHERE public=?;', pubkey)
         try:
             seckey = c.fetchone()[0][0:18] + '*' * 14
-            result = "<span style='background:#4EB053'>%s</span>" % (seckey)
+            result = "%s" % (seckey)
         except:
-            result = "<span style='background:#DF4F4F'>Key not found</span>"
+            result = "error1"
         c.close()
         conn.close()
         return jsonify(result=result)
     else:
-        return jsonify(result="<span style='background:#DF4F4F'>Invalid \
-            format</span>")
+        return jsonify(result="error2")
 
 
-@app.route('/charge', methods=['GET', 'POST'])
+@app.route('/charge')
+@jsonp
 def stripecharge():
-    if request.method == 'GET':
-        return redirect(url_for('stripeserver'))
-    else:
-        publickey = (request.form['publicKey'],)
+        publickey = (request.args.get('publishableKey'),)
         conn = sqlite3.connect('stripekeys.db')
         c = conn.cursor()
         c.execute('SELECT secret FROM keys WHERE public=?;', publickey)
         try:
             seckey = c.fetchone()[0]
-            sql_stripe.charge(
+            result = sql_stripe.charge(
                 seckey=seckey,
-                token=request.form['stripeToken'],
-                amount=request.form['amount'],
-                description=request.form['description']
+                token=request.args.get('stripeToken'),
+                amount=request.args.get('amount'),
+                description=request.args.get('description')
             )
+            if result == "Thank you!":
+                return jsonify(result=result)
+            else:
+                return jsonify(error=result)
         except:
-            pass
+            return jsonify(error={'message': 'Stripe key pair not found. '
+                                  'Please verify on henrygd.me/stripeserver'})
