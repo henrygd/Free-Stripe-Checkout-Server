@@ -1,5 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, \
-    url_for, current_app
+from flask import Flask, render_template, request, jsonify, current_app
 from functools import wraps
 import sqlite3
 import sql_stripe
@@ -33,6 +32,7 @@ def stripeserver():
     return render_template('stripeserver.html')
 
 
+# adds keys to database
 @app.route('/addkey', methods=['POST'])
 def addkey():
     goodpub = re.compile("^pk_(test|live)_[a-zA-Z0-9]{24}$")
@@ -49,6 +49,7 @@ def addkey():
         return jsonify(result="error2")
 
 
+# takes publishable/public key, returns matched secret key from db
 @app.route('/getkey')
 def getkey():
     if re.compile("^pk_(test|live)_[a-zA-Z0-9]{24}$").match(request.args.get('a')):
@@ -58,7 +59,7 @@ def getkey():
         c.execute('SELECT secret FROM keys WHERE public=?;', pubkey)
         try:
             seckey = c.fetchone()[0][0:18] + '*' * 14
-            result = "%s" % (seckey)
+            result = seckey
         except:
             result = "error1"
         c.close()
@@ -68,6 +69,7 @@ def getkey():
         return jsonify(result="error2")
 
 
+# takes stripe token, other parameters, creates stripe charge
 @app.route('/charge')
 @jsonp
 def stripecharge():

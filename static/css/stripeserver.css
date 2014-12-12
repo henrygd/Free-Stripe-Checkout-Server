@@ -1,10 +1,10 @@
-body{overflow:auto;font-family:'Open Sans';font-size:16px;background:#F0F0F0;color:#4F4F4F;width:80%;margin:auto;max-width:1170px;padding-bottom:40px}
-#header{width:100%;margin:0 0 25px auto;text-align:center;color:#FAFAFA;background-color:#3CC86D;box-shadow:0 8px #04A03B;}
+body{overflow:auto;font-family:'Open Sans';font-size:16px;color:#4F4F4F;width:80%;margin:auto;max-width:1170px;padding-bottom:40px;background:-webkit-linear-gradient(90deg,#F5F5F5 10%,#EAEAEA 90%);background:-moz-linear-gradient(90deg,#F5F5F5 10%,#EAEAEA 90%);background:-ms-linear-gradient(90deg,#F5F5F5 10%,#EAEAEA 90%);background:-o-linear-gradient(90deg,#F5F5F5 10%,#EAEAEA 90%);background:linear-gradient(90deg,#F5F5F5 10%,#EAEAEA 90%)}
+#header{width:100%;margin:0 0 25px auto;text-align:center;color:#FAFAFA;background-color:#3CC86D;box-shadow:0 8px #04A03B;border-radius:25px}
 #header h1{padding:10px;}
 h1{font-family: "Merriweather Sans";font-size:25px;font-weight:800;text-align:center;text-transform:uppercase;margin-top:40px}
 p{line-height:1.6;}
 .inputs{margin:30px 0;}
-h2{color:#0074D9;font-weight:400;margin-bottom:-10px;}
+.inputs h1{font-size:22px;margin-bottom:-9px}
 h3{font-weight:400;margin-bottom:10px;font-size:20px;}
 input{border:none;outline:none;padding:10px;font-size:18px;background-color:#4C4C4C;color:#F4F4F4;box-shadow:0 5px #383838;}
 #result1>span, #result2>span{font-size:19px;padding:2px 8px 4px;border-radius:2px;color:#F9F9F9}
@@ -15,14 +15,15 @@ table{border-spacing:0;background-color:#4C4C4C;color:#F4F4F4;margin-top:10px}
 th{height:40px;background-color:#646464}
 tfoot{background-color:#646464}
 td{width:50%;border-bottom: 1px solid #666;}
-td>p{margin:35px 50px;};
+td>p{margin:30px 50px;};
 tr{width:100%}
 .tablebottom p{text-align:left;margin:20px 40px auto}
 #testcard1,#testcard2{float:left;width:50%;margin:12px 0 20px}
 #testcard1>p,#testcard2>p{width:65%;margin:10px auto;padding:15px;box-shadow:none;text-align:center}
 .imp{background:#2AB85C;color:#FAFAFA;padding:0 7px 1px;border-radius:5px;box-shadow:0 4px #04A03B;font-weight:600}
-a,a:visited{text-decoration:none;color:#0074D9}
-a:hover,a:visited:hover{color:#04A03B;transition:0.5s}
+a,a:visited{text-decoration:none;color:#1A95EF;transition:color .4s;}
+a:hover,a:visited:hover{color:#7FDBFF;}
+a:active {color:#EF5F5F!important;}
 footer{width:100%;background-color:#2AB85C;box-shadow:0 8px #04A03B;}
 .footerheight{height:90px}
 .test,.foreal{float:left;width:50%;margin:0 auto;margin-top:20px;text-align:center;}
@@ -30,8 +31,11 @@ footer{width:100%;background-color:#2AB85C;box-shadow:0 8px #04A03B;}
 #testbtn{width:190px;}
 #forealbtn{width:200px;padding:18px 7px 18px 46px;}
 #stripestartbtn,#forealdonatebtn{padding:15px 15px 15px 15px;font-size:14px}
-.error{background:#EF5F5F;box-shadow: 0 5px #EA4A4A;}
+.error{background:#EF5F5F;box-shadow: 0 5px #E24545;}
 .success{background:#2AB85C;box-shadow: 0 5px #04A03B}
+::selection{background:#76DEF5;color:#fff}::-moz-selection{background:#76DEF5;color:#fff}
+#loadingpin{display:none;position:fixed;left:50%;top:45%;z-index:9}
+#loading{display:none;position:absolute;color:#fafafa;left:-15px;top:-35px;}
 
 /* modal stuff */
 .overlay{display:none;position:fixed;top:0;bottom:0;left:0;right:0;overflow:hidden;padding:0;margin:0;background-color:rgba(0,0,0,0.6);z-index:1}
@@ -63,6 +67,7 @@ pre .keyword,pre .storage,pre .tag-name{color:#9F7CA9}
 .btn-success:after,.btn-error:after{z-index:1;color:#fff;left:40%}
 .icon-add:before{content:"\f055"}
 .icon-back:before{content:"\f1da";color:#f5f5f5;position:absolute;right:10%;padding:10px;margin-top:3px;font-size:20px;cursor:pointer}
+.icon-back:hover{opacity:0.8}
 .icon-check:before{content:"\f058"}
 .icon-meh:before{content:"\f11a";color:#39CD6D;width:30%}
 .icon-stripe:before{content:"\f1f5";color:#39CD6D;width:30%}
@@ -118,9 +123,10 @@ body{width:90%}
 input{margin-bottom: 10px}
 .footerheight{height:150px;}
 .test,.foreal{clear:both;width:100%}
-td>p{margin:10px;padding: 10px 0}
+td>p{margin:10px;padding: 10px 0;font-size:14px}
 #testcard1,#testcard2{clear:both;width:100%}
 #testcard1{margin-top:30px;}
 #testcard1>p,#testcard2>p{margin:0 auto}
 .icon-back:before{right:5%;font-size:16px}
+.tablebottom p{margin:10px 40px auto;font-size:15px;}
 }
